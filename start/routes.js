@@ -17,3 +17,8 @@
 const Route = use('Route')
 
 Route.on('/').render('welcome')
+
+Route.get('/item', 'ItemController.index')
+Route.get('/item-add', 'ItemController.create').as('item-add')
+
+//Route.get('/item', () => 'Hello Adonis')
