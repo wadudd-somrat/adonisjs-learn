@@ -8,9 +8,9 @@ import Post from "App/Models/Post";
 
 export default class PostsController {
 
-  public async index() {
-
-    const getPosts = await Post.query().preload("comment")
+  public async index({auth}) {
+    await auth.use('web').authenticate()
+    const getPosts = await Post.query().where('create_by',auth.user.id).preload("comment")
 
 
    /* const getPosts = await Database
@@ -25,8 +25,8 @@ export default class PostsController {
 
   }
 
-  public async store({request, response}) {
-
+  public async store({request, response,auth}) {
+    await auth.use('web').authenticate()
     const postImage = request.file('image_url', {
       size: '2mb',
       extnames: ['jpg', 'png'],
@@ -52,7 +52,7 @@ export default class PostsController {
 
     await Database
       .table('posts')
-      .insert({title: request.input('title'), details: request.input('details'),image :await Drive.getUrl('postImage')})
+      .insert({title: request.input('title'), details: request.input('details'),image :await Drive.getUrl('postImage')+'/'+postImage.fileName,'create_by':auth.user.id})
 
     return response.redirect('posts')
 
