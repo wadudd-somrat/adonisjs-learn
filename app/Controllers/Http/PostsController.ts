@@ -102,7 +102,7 @@ export default class PostsController {
   public async allPostWithComment()
   {
     const getPosts = await Database
-      .from('posts')
+      .from('posts').innerJoin('comments','posts.id','comments.post_id')
     return View.render('postComment/index', {getPosts})
   }
 
